@@ -19,16 +19,19 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
 
-IS_PROD = False
+IS_PROD = True
 
-from bingosync.secret_settings import SECRET_KEY, ADMINS, SERVER_EMAIL, DB_USER
+SECRET_KEY = os.getenv('SECRET_KEY')
+DB_NAME = os.getenv('POSTGRES_DB')
+DB_USER = os.getenv('POSTGRES_USER')
+DB_PASSWORD = os.getenv('POSTGRES_PASSWORD')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = not IS_PROD
 
 IS_TEST = len(sys.argv) > 1 and sys.argv[1] == "test"
 
-ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
+ALLOWED_HOSTS = ["127.0.0.1", "localhost", "bingosync-postgres", "bingosync-websocket", "*"]
 
 EMAIL_HOST = "localhost"
 EMAIL_PORT = 25
@@ -46,10 +49,13 @@ INSTALLED_APPS = (
     'bootstrapform',
     'crispy_forms',
     'url_tools',
-    'bingosync'
+    'bingosync',
+    'django_createsuperuserwithpassword'
 )
 
 MIDDLEWARE = (
+    "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     'bingosync.middleware.RequestLoggingMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -93,8 +99,11 @@ WSGI_APPLICATION = 'bingosync.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'bingosync',
+        'NAME': DB_NAME,
         'USER': DB_USER,
+        'PASSWORD': DB_PASSWORD,
+        'HOST': 'bingosync-postgres',
+        'PORT': '5432',
     }
 }
 
@@ -207,7 +216,7 @@ else:
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
-STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.CachedStaticFilesStorage'
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 STATIC_URL = '/static/'
 
@@ -215,14 +224,15 @@ STATICFILES_DIRS = (
   os.path.join(BASE_DIR, 'static/'),
 )
 
-STATIC_ROOT = '/var/www/bingosync.com/static/'
+STATIC_ROOT = '/app/staticfiles/'
 
 
-INTERNAL_SOCKETS_URL = "127.0.0.1:8888"
-PUBLIC_SOCKETS_URL = "sockets.bingosync.com"
+INTERNAL_SOCKETS_URL = "bingosync-websocket:8888"
+PUBLIC_SOCKETS_URL = "YOUR_PUBLIC_DOMAIN:8888"
 
+# Note: we could use wss / https but for our purposes it is not needed / annoying to set up
 if IS_PROD:
-    SOCKETS_URL = "wss://" + PUBLIC_SOCKETS_URL
+    SOCKETS_URL = "ws://" + PUBLIC_SOCKETS_URL
 else:
     SOCKETS_URL = "ws://" + INTERNAL_SOCKETS_URL
 

@@ -1,0 +1,42 @@
+services:
+  db:
+    image: postgres
+    container_name: bingosync-postgres
+    ports:
+      - "5432:5432"
+    env_file: 'secrets.env'
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}"]
+      interval: 10s
+      timeout: 60s
+      retries: 5
+  app:
+    build:
+      context: ./bingosync-app/
+      dockerfile: Dockerfile
+    container_name: bingosync-app
+    stop_signal: SIGINT
+    env_file: 'secrets.env'
+    command: bash -c "
+        python3 ./manage.py makemigrations
+        && python3 ./manage.py migrate
+        && echo yes | python3 ./manage.py collectstatic
+        && python3 ./manage.py createsuperuserwithpassword --username $${DJANGO_SUPERUSER_USERNAME} --password $${DJANGO_SUPERUSER_PASSWORD} --email $${DJANGO_SUPERUSER_EMAIL} --preserve
+        && python3 ./manage.py runserver 0.0.0.0:8000
+      "
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+  ws:
+    build:
+      context: ./bingosync-websocket
+      dockerfile: Dockerfile
+    container_name: bingosync-websocket
+    stop_signal: SIGINT
+    command: python3 ./app.py
+    ports:
+      - "8888:8888"
+    depends_on:
+      - app

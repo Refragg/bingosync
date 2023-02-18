@@ -1,5 +1,18 @@
-Bingosync.com
+Docker Bingosync
 ===
+
+This is a fork of the Bingosync.com repository focused on wrapping the project into a nice Docker Compose application to allow easy deployment anywhere
+
+This also has a WhiteNoise static file server so that you don't have to worry about serving the static files yourself
+
+## Deployment:
+
+- Install docker on the target machine
+- Clone this repository
+- Edit the `secrets.env` file to reflect your configuration
+- Run `docker compose up` in the repo's root directory
+
+---
 
 This is the repository powering [bingosync.com](http://bingosync.com/),
 a web application that lets people collaboratively work on "bingo boards"
