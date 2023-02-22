@@ -35,7 +35,7 @@ services:
       dockerfile: Dockerfile
     container_name: bingosync-websocket
     stop_signal: SIGINT
-    command: python3 ./app.py
+    command: python3 -u ./app.py
     ports:
       - "8888:8888"
     depends_on:
