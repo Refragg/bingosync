@@ -12,6 +12,7 @@ RUN npm install npm@latest -g && \
 RUN mkdir app
 WORKDIR /app
 ADD ./requirements.txt requirements.txt
+RUN mkdir logs
 COPY . .
 RUN sed -i "s/YOUR_PUBLIC_DOMAIN/$(curl -s https://ipinfo.io/ip)/" bingosync/settings.py
 RUN pip install -r requirements.txt
