@@ -5,12 +5,29 @@ This is a fork of the Bingosync.com repository focused on wrapping the project i
 
 This also has a WhiteNoise static file server so that you don't have to worry about serving the static files yourself
 
+## SSL certificates
+
+You will need SSL certificates to be able to run this server, I recommend using Certbot to get one.
+With Certbot, once you have your SSL certificates, you want to use the 'fullchain.pem' and 'privkey.pem' files.
+
+the Docker Compose application expects you to have these environment variables set on your system:
+
+- SSL_CERT_PATH: The directory where the certificates are (i.e.: /path/to/certs/)
+- SSL_CERT_FILE: The certificate file / chain file file name (i.e.: fullchain.pem)
+- SSL_CERT_KEY: The certificate private key file (i.e.: privkey.pem)
+
 ## Deployment:
 
 - Install docker on the target machine
+- Get the SSL certificates on the target machine
 - Clone this repository
-- Edit the `secrets.env` file to reflect your configuration
-- Run `docker compose up` in the repo's root directory
+* Secrets:
+  - Edit the `secrets.env` file to reflect your configuration
+  - Set the SSL environment variables
+  - Check if the variables are getting picked up by Docker Compose by running `docker compose convert`
+
+- Run `docker compose up -d` in the repo's root directory, (-d makes it run in the background)
+- Run `docker compose down` to stop the server
 
 ---
 

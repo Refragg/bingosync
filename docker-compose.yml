@@ -7,7 +7,7 @@ services:
     env_file: 'secrets.env'
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}"]
-      interval: 10s
+      interval: 5s
       timeout: 60s
       retries: 5
   app:
@@ -17,18 +17,42 @@ services:
     container_name: bingosync-app
     stop_signal: SIGINT
     env_file: 'secrets.env'
+    environment:
+      SSL_CERT_FILE: ${SSL_CERT_FILE}
+      SSL_CERT_KEY: ${SSL_CERT_KEY}
+    volumes: 
+      - ${SSL_CERT_PATH}:/certs
     command: bash -c "
         python3 ./manage.py makemigrations
         && python3 ./manage.py migrate
         && echo yes | python3 ./manage.py collectstatic
         && python3 ./manage.py createsuperuserwithpassword --username $${DJANGO_SUPERUSER_USERNAME} --password $${DJANGO_SUPERUSER_PASSWORD} --email $${DJANGO_SUPERUSER_EMAIL} --preserve
-        && python3 ./manage.py runserver 0.0.0.0:8000
+        && gunicorn --certfile=/certs/$${SSL_CERT_FILE} --keyfile=/certs/$${SSL_CERT_KEY} bingosync.wsgi:application --bind 0.0.0.0:8000
       "
-    ports:
-      - "8000:8000"
+    expose:
+      - 8000
     depends_on:
       db:
         condition: service_healthy
+  nginx:
+    build: 
+      context: ./bingosync-nginx
+      dockerfile: Dockerfile
+      args:
+        - SSL_CERT_FILE=${SSL_CERT_FILE}
+        - SSL_CERT_KEY=${SSL_CERT_KEY}
+    container_name: bingosync-nginx
+    environment:
+      SSL_CERT_FILE: ${SSL_CERT_FILE}
+      SSL_CERT_KEY: ${SSL_CERT_KEY}
+    volumes:
+      - ${SSL_CERT_PATH}:/certs
+    ports:
+      - 80:80
+      - 443:443
+      - 8888:8888
+    depends_on:
+      - app
   ws:
     build:
       context: ./bingosync-websocket
@@ -36,7 +60,8 @@ services:
     container_name: bingosync-websocket
     stop_signal: SIGINT
     command: python3 -u ./app.py
+    env_file: 'secrets.env'
     ports:
-      - "8888:8888"
+      - "8889"
     depends_on:
       - app

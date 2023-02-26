@@ -19,19 +19,20 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
 
-IS_PROD = True
+IS_PROD = os.getenv('IS_PROD', False)
 
 SECRET_KEY = os.getenv('SECRET_KEY')
 DB_NAME = os.getenv('POSTGRES_DB')
 DB_USER = os.getenv('POSTGRES_USER')
 DB_PASSWORD = os.getenv('POSTGRES_PASSWORD')
+PUBLIC_DOMAIN = os.getenv('PUBLIC_DOMAIN')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = not IS_PROD
 
 IS_TEST = len(sys.argv) > 1 and sys.argv[1] == "test"
 
-ALLOWED_HOSTS = ["127.0.0.1", "localhost", "bingosync-postgres", "bingosync-websocket", "*"]
+ALLOWED_HOSTS = ["127.0.0.1", "localhost", "bingosync-postgres", "bingosync-websocket", PUBLIC_DOMAIN, "*"]
 
 EMAIL_HOST = "localhost"
 EMAIL_PORT = 25
@@ -226,18 +227,17 @@ STATICFILES_DIRS = (
 
 STATIC_ROOT = '/app/staticfiles/'
 
+INTERNAL_SOCKETS_URL = PUBLIC_DOMAIN + ":8888"
+PUBLIC_SOCKETS_URL = PUBLIC_DOMAIN + ":8888"
 
-INTERNAL_SOCKETS_URL = "bingosync-websocket:8888"
-PUBLIC_SOCKETS_URL = "YOUR_PUBLIC_DOMAIN:8888"
-
-# Note: we could use wss / https but for our purposes it is not needed / annoying to set up
 if IS_PROD:
-    SOCKETS_URL = "ws://" + PUBLIC_SOCKETS_URL
+    SOCKETS_URL = "wss://" + PUBLIC_SOCKETS_URL
 else:
     SOCKETS_URL = "ws://" + INTERNAL_SOCKETS_URL
 
 # used for publishing events from django to tornado, so can always go across localhost
-SOCKETS_PUBLISH_URL = "http://" + INTERNAL_SOCKETS_URL
+# FIXME: make this work over localhost somehow
+SOCKETS_PUBLISH_URL = "https://" + INTERNAL_SOCKETS_URL
 
 
 # crispy forms confiuguration

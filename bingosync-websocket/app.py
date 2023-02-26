@@ -4,13 +4,15 @@ import tornado.websocket
 from tornado.httpclient import AsyncHTTPClient
 
 from collections import defaultdict
+import os
 import datetime
 import json
 import random
 import requests
 import pprint
 
-BASE_DJANGO_URL = "http://bingosync-app:8000/"
+# FIXME: make this work over localhost somehow
+BASE_DJANGO_URL = "https://" + os.getenv('PUBLIC_DOMAIN') + "/"
 BASE_API_URL = BASE_DJANGO_URL + "api/"
 
 SOCKET_VERIFICATION_URL = BASE_API_URL + "socket/"
@@ -197,7 +199,7 @@ application = tornado.web.Application([
     (r"/broadcast", BroadcastWebSocket)
 ])
 
-PORT = 8888
+PORT = 8889
 
 def periodic_ping():
     ROUTER.ping_all()
