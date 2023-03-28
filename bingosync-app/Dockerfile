@@ -12,7 +12,7 @@ RUN npm install npm@latest -g && \
 RUN mkdir app
 WORKDIR /app
 ADD ./requirements.txt requirements.txt
+RUN pip install -r requirements.txt
 RUN mkdir logs
 COPY . .
-RUN pip install -r requirements.txt
 EXPOSE 8000
