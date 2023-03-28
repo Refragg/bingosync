@@ -13,6 +13,10 @@ var ChatPanel = (function(){
         return name;
     }
 
+    function capitalizeFirstLetter(string) {
+        return string.charAt(0).toUpperCase() + string.slice(1);
+    }
+
     function processChatJson(json) {
         // Generate readable timestamp
         var zeroPad = function (str, length) {
@@ -68,12 +72,14 @@ var ChatPanel = (function(){
         }
 
         // otherwise first format the name of the message sender
-        var playerSpan = processPlayerJson(json["player"], getPlayerColorClass(json["player_color"]));
         if(json["type"] === "chat") {
+            var playerSpan = processPlayerJson(json["player"], getPlayerColorClass(json["player_color"]));
             var message = $("<span>", {"class": "chat-message", text: json["text"]}).toHtml();
             return $("<div>", {html: timeHtml + " " + playerSpan + ": " + message}).toHtml();
         }
         else if(json["type"] === "goal") {
+            var playerColor = getPlayerColorClass(json["color"]);
+            var playerSpan = $("<span>", {"class": "chat-name " + playerColor, text: capitalizeFirstLetter(json["color"])}).toHtml();
             var colorClass = json["remove"] ? getPlayerColorClass('blank') : getPlayerColorClass(json["color"]);
             var goal = $("<span>", {"class": "goal-name " + colorClass, text: json["square"]["name"]}).toHtml();
 
