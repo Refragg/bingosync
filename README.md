@@ -8,18 +8,19 @@ This also has a WhiteNoise static file server so that you don't have to worry ab
 ## SSL certificates
 
 You will need SSL certificates to be able to run this server, I recommend using Certbot to get one.
-With Certbot, once you have your SSL certificates, you want to use the 'fullchain.pem' and 'privkey.pem' files.
+With Certbot, once you have your SSL certificates, you want to export the 'fullchain.pem' and 'privkey.pem' files into a .pfx certificate.
 
 the Docker Compose application expects you to have these environment variables set on your system:
 
 - SSL_CERT_PATH: The directory where the certificates are (i.e.: /path/to/certs/)
-- SSL_CERT_FILE: The certificate file / chain file file name (i.e.: fullchain.pem)
-- SSL_CERT_KEY: The certificate private key file (i.e.: privkey.pem)
+- SSL_CERT_FILE: The .pfx certificate file name (i.e.: the-certificate.pfx)
+- SSL_CERT_PASSWORD: The certificate's password
+- PUBLIC_DOMAIN: The address to your public domain where this bingosync instance is hosted
 
 ## Deployment:
 
 - Install docker on the target machine
-- Get the SSL certificates on the target machine
+- Get the SSL certificates on the target machine and export them as a .pfx file
 - Clone this repository
 * Secrets:
   - Edit the `secrets.env` file to reflect your configuration

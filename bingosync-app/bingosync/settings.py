@@ -227,7 +227,7 @@ STATICFILES_DIRS = (
 
 STATIC_ROOT = '/app/staticfiles/'
 
-INTERNAL_SOCKETS_URL = PUBLIC_DOMAIN + ":8888"
+INTERNAL_SOCKETS_URL = "bingosync-websocket:8889"
 PUBLIC_SOCKETS_URL = PUBLIC_DOMAIN + ":8888"
 
 if IS_PROD:
@@ -236,8 +236,7 @@ else:
     SOCKETS_URL = "ws://" + INTERNAL_SOCKETS_URL
 
 # used for publishing events from django to tornado, so can always go across localhost
-# FIXME: make this work over localhost somehow
-SOCKETS_PUBLISH_URL = "https://" + INTERNAL_SOCKETS_URL
+SOCKETS_PUBLISH_URL = "http://" + INTERNAL_SOCKETS_URL
 
 
 # crispy forms confiuguration
