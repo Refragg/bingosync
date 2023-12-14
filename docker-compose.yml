@@ -62,3 +62,6 @@ services:
       - "8889"
     depends_on:
       - app
+networks:
+  default:
+    name: bingosync
