@@ -209,7 +209,7 @@ class GameType(Enum):
     banjo_tooie_long = 205
     need_for_speed_carbon = 206
     kotor = 207
-    sonic_r = 208
+    sonic_r_regular = 208
     celeste_turkish = 209
     mgs_portable_ops_plus_training = 210
     old_school_runescape = 211
@@ -364,6 +364,7 @@ class GameType(Enum):
     shadow_hero = 360
     shadow_dark = 361
     shadow_vs = 362
+    sonic_r_balanced = 363
 
 
     def __str__(self):
@@ -845,6 +846,13 @@ MANUAL_GAME_GROUPS = {
             (GameType.shadow_vs, "2 vs 2", "Shadow 2 vs 2"),
         ],
     },
+    GameType.sonic_r_regular: {
+        "name": "Sonic R",
+        "variants": [
+            (GameType.sonic_r_regular, "Regular", "Sonic R Regular"),
+            (GameType.sonic_r_balanced, "Balanced", "Sonic R Balanced"),
+        ],
+    },
     GameType.splatoon_2_octo_expansion: {
         "name": "Splatoon 2",
         "variants": [
@@ -1145,7 +1153,6 @@ SINGLETON_GAME_GROUPS = {
     **singleton_group(GameType.smash_ultimate_world_of_light, "Smash Ultimate: World of Light", "Smush: WoL"),
     **singleton_group(GameType.snailiad, "Snailiad", "Snailiad"),
     **singleton_group(GameType.sonic_adventure_dx, "Sonic Adventure DX", "SADX"),
-    **singleton_group(GameType.sonic_r, "Sonic R", "Sonic R"),
     **singleton_group(GameType.sos_poot_all_items, "Story of Seasons: Pioneers of Olive Town", "SoS: PoOT All Items", "All Items"),
     **singleton_group(GameType.soul_knight, "Soul Knight", "Soul Knight"),
     **singleton_group(GameType.spelunky_2, "Spelunky 2", "Spelunk 2"),
