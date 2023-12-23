@@ -53,8 +53,8 @@ function initializeGameSelectForm($form) {
 
             $variantTypeContainer.removeClass("hidden");
 
-            // 18 and 172 are the custom game types, so show the json input
-            if ($gameType.val() == 18 || $gameType.val() == 172) {
+            // 1 and 2 are the custom game types, so show the json input
+            if ($gameType.val() == 1 || $gameType.val() == 2) {
                 $customJsonContainer.removeClass("hidden");
             } else {
                 $customJsonContainer.addClass("hidden");
