@@ -842,7 +842,7 @@ MANUAL_GAME_GROUPS = {
         "variants": [
             (GameType.shadow_normal, "Normal", "Shadow Normal"),
             (GameType.shadow_hero, "Hero", "Shadow Hero"),
-            (GameType.shadow_dark, "Dark Story", "Shadow Dark"),
+            (GameType.shadow_dark, "Dark", "Shadow Dark"),
             (GameType.shadow_vs, "2 vs 2", "Shadow 2 vs 2"),
         ],
     },
