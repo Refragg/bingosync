@@ -360,6 +360,10 @@ class GameType(Enum):
     hitman_3_chongqing = 356
     hitman_3_mendoza = 357
     horizon_zero_dawn_frozen_wilds = 358
+    shadow_normal = 359
+    shadow_hero = 360
+    shadow_dark = 361
+    shadow_vs = 362
 
 
     def __str__(self):
@@ -830,6 +834,15 @@ MANUAL_GAME_GROUPS = {
             (GameType.sonic_adventure_2_dark_story, "Dark Story", "SA2 Dark"),
             (GameType.sonic_adventure_2_long, "Long", "SA2 Long"),
             (GameType.sonic_adventure_2_nightmare, "Nightmare", "SA2 Nightmare"),
+        ],
+    },
+    GameType.shadow_normal: {
+        "name": "Shadow The Hedgehog",
+        "variants": [
+            (GameType.shadow_normal, "Normal", "Shadow Normal"),
+            (GameType.shadow_hero, "Hero", "Shadow Hero"),
+            (GameType.shadow_dark, "Dark Story", "Shadow Dark"),
+            (GameType.shadow_vs, "2 vs 2", "Shadow 2 vs 2"),
         ],
     },
     GameType.splatoon_2_octo_expansion: {
