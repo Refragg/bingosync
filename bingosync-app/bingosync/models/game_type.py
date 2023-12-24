@@ -18,6 +18,7 @@ class GameType(Enum):
     shadow_hero = 14
     shadow_dark = 15
     shadow_vs = 16
+    billy = 17
 
 
     def __str__(self):
@@ -151,6 +152,7 @@ MANUAL_GAME_GROUPS = {
 }
 SINGLETON_GAME_GROUPS = {
     **singleton_group(GameType.sonic_adventure_dx, "Sonic Adventure DX", "SADX"),
+    **singleton_group(GameType.billy, "Billy Hatcher and the Giant Egg", "Billy"),
 }
 GAME_GROUPS = {**MANUAL_GAME_GROUPS, **SINGLETON_GAME_GROUPS}
 
